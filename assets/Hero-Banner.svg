@@ -1,0 +1,530 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" width="100%" height="100%" shape-rendering="crispEdges">
+  <defs>
+    <!-- ==================== 1-BIT PIXEL DITHER PATTERNS ==================== -->
+    <!-- 50% Checkerboard Dither (2x2 pixel grid) -->
+    <pattern id="dither-50" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#F4EFE6" />
+      <rect x="0" y="0" width="2" height="2" fill="#181818" />
+      <rect x="2" y="2" width="2" height="2" fill="#181818" />
+    </pattern>
+
+    <!-- 75% Dense Dither (Dark mountain slopes) -->
+    <pattern id="dither-75" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#181818" />
+      <rect x="2" y="0" width="2" height="2" fill="#F4EFE6" />
+    </pattern>
+
+    <!-- 25% Sparse Dither (Light mountain highlights & letter shadow) -->
+    <pattern id="dither-25" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#F4EFE6" />
+      <rect x="0" y="0" width="2" height="2" fill="#181818" />
+    </pattern>
+
+    <!-- 12% Ultra-Sparse Stipple (Distant haze & water texture) -->
+    <pattern id="dither-12" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="none" />
+      <rect x="0" y="0" width="2" height="2" fill="#181818" />
+      <rect x="4" y="4" width="2" height="2" fill="#181818" />
+    </pattern>
+
+    <!-- Coral Red 50% Halftone Dither (Top of the retro sun) -->
+    <pattern id="dither-red" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#FF4E42" />
+      <rect x="0" y="0" width="2" height="2" fill="#F4EFE6" />
+      <rect x="2" y="2" width="2" height="2" fill="#F4EFE6" />
+    </pattern>
+
+    <!-- Horizontal Water Ripple Pattern -->
+    <pattern id="water-lines" width="8" height="6" patternUnits="userSpaceOnUse">
+      <rect width="8" height="6" fill="#F4EFE6" />
+      <rect x="0" y="0" width="8" height="2" fill="#181818" />
+      <rect x="2" y="3" width="4" height="1" fill="#181818" />
+    </pattern>
+
+    <!-- Clip Path for the Giant Retro Sun -->
+    <clipPath id="sun-clip">
+      <circle cx="968" cy="130" r="80" />
+    </clipPath>
+
+    <!-- Reusable 2-Frame Pixel Sparkle Sprite (11x11, frame 1: big 4-point star, frame 2: small plus) -->
+    <g id="star-sparkle" fill="#181818">
+      <g class="f1">
+        <rect x="5" y="0" width="1" height="11" />
+        <rect x="0" y="5" width="11" height="1" />
+        <rect x="4" y="2" width="3" height="7" />
+        <rect x="2" y="4" width="7" height="3" />
+      </g>
+      <g class="f2">
+        <rect x="5" y="2" width="1" height="7" />
+        <rect x="2" y="5" width="7" height="1" />
+        <rect x="4" y="4" width="3" height="3" />
+      </g>
+    </g>
+
+    <!-- Reusable Small Pixel Cross (+) -->
+    <g id="star-plus">
+      <rect x="3" y="0" width="2" height="8" />
+      <rect x="0" y="3" width="8" height="2" />
+    </g>
+
+    <!-- Pixel Art Title Definition (SHREY / SINGH) on 6px Grid -->
+    <g id="pixel-title-glyphs">
+      <!-- ================= ROW 1: S H R E Y ================= -->
+      <!-- S (x: 54, y: 66) -->
+      <path d="M60,66 h24 v6 h-24 v12 h24 v24 h-24 v-6 h18 v-12 h-24 v-18 h6 z M78,72 h6 v6 h-6 z M54,96 h6 v6 h-6 z" />
+      <!-- H (x: 96, y: 66) -->
+      <path d="M96,66 h8 v18 h18 v-18 h8 v42 h-8 v-18 h-18 v18 h-8 z" />
+      <!-- R (x: 140, y: 66) -->
+      <path d="M140,66 h26 v6 h6 v12 h-6 v6 h6 v18 h-8 v-18 h-16 v18 h-8 z M148,72 v12 h16 v-12 z" />
+      <!-- E (x: 184, y: 66) -->
+      <path d="M184,66 h32 v6 h-24 v12 h18 v6 h-18 v12 h24 v6 h-32 z" />
+      <!-- Y (x: 226, y: 66) -->
+      <path d="M226,66 h8 v12 h6 v6 h6 v-6 h6 v-12 h8 v14 h-6 v8 h-6 v20 h-10 v-20 h-6 v-8 h-6 z" />
+
+      <!-- ================= ROW 2: S I N G H ================= -->
+      <!-- S (x: 54, y: 126) -->
+      <path d="M60,126 h24 v6 h-24 v12 h24 v24 h-24 v-6 h18 v-12 h-24 v-18 h6 z M78,132 h6 v6 h-6 z M54,156 h6 v6 h-6 z" />
+      <!-- I (x: 96, y: 126) -->
+      <path d="M96,126 h30 v6 h-11 v30 h11 v6 h-30 v-6 h11 v-30 h-11 z" />
+      <!-- N (x: 138, y: 126) -->
+      <path d="M138,126 h8 v8 h6 v8 h6 v8 h6 v-24 h8 v42 h-8 v-10 h-6 v-8 h-6 v-8 h-6 v26 h-8 z" />
+      <!-- G (x: 184, y: 126) -->
+      <path d="M190,126 h24 v6 h-24 v30 h18 v-12 h-10 v-6 h18 v24 h-26 v-6 h-6 v-30 h6 z M214,132 h6 v6 h-6 z" />
+      <!-- H (x: 230, y: 126) -->
+      <path d="M230,126 h8 v18 h18 v-18 h8 v42 h-8 v-18 h-18 v18 h-8 z" />
+    </g>
+
+    <style>
+      .bg { fill: #F4EFE6; }
+      .ink { fill: #181818; }
+      .coral { fill: #FF4E42; }
+      .cream { fill: #F4EFE6; }
+
+      .badge-text {
+        font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace;
+        font-weight: 800;
+        font-size: 19.5px;
+        fill: #181818;
+        letter-spacing: 1.4px;
+      }
+
+      .tagline-text {
+        font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 15px;
+        fill: #181818;
+        letter-spacing: 0.9px;
+      }
+
+      /* ===== 90s pixel-art motion rules =====
+         Every animation uses hard frame cuts (steps(1, end)), 1-bit visibility
+         (opacity 0 or 1 only) and whole-pixel offsets. No easing, fades or scaling. */
+
+      /* Generic 2-frame sprite swap */
+      @keyframes frame-1of2 { 0% { opacity: 1; } 50%, 100% { opacity: 0; } }
+      @keyframes frame-2of2 { 0% { opacity: 0; } 50%, 100% { opacity: 1; } }
+
+      /* 1. Blinking Red Underscore Cursor */
+      .cursor { animation: frame-1of2 1s steps(1, end) infinite; }
+
+      /* 2. Sparkle Sprite: big star -> small plus -> off -> small plus */
+      @keyframes sparkle-big { 0% { opacity: 1; } 50%, 100% { opacity: 0; } }
+      @keyframes sparkle-small { 0% { opacity: 0; } 50% { opacity: 1; } 75% { opacity: 0; } 85%, 100% { opacity: 1; } }
+      .f1 { animation: sparkle-big 2.4s steps(1, end) infinite; animation-delay: var(--d, 0s); }
+      .f2 { animation: sparkle-small 2.4s steps(1, end) infinite; animation-delay: var(--d, 0s); }
+
+      /* 3. Hard On/Off Blink for Small Crosses */
+      @keyframes blink-hard { 0% { opacity: 1; } 80%, 100% { opacity: 0; } }
+      .blink-a { animation: blink-hard 2s steps(1, end) infinite; }
+      .blink-b { animation: blink-hard 2.6s steps(1, end) 0.8s infinite; }
+      .blink-c { animation: blink-hard 3.2s steps(1, end) 1.5s infinite; }
+
+      /* 4. Floating Ringed Planet: 4-frame bob on whole pixels */
+      @keyframes planet-bob {
+        0% { transform: translateY(0px); }
+        25% { transform: translateY(-2px); }
+        50% { transform: translateY(-4px); }
+        75%, 100% { transform: translateY(-2px); }
+      }
+      .saturn-bob { animation: planet-bob 2s steps(1, end) infinite; }
+
+      /* 5. Grooving Panda: 2-frame bob + occasional 1-frame blink */
+      @keyframes panda-groove { 0% { transform: translateY(0px); } 50%, 100% { transform: translateY(2px); } }
+      .panda-group { animation: panda-groove 1.2s steps(1, end) infinite; }
+
+      @keyframes eye-blink { 0% { opacity: 1; } 96%, 100% { opacity: 0; } }
+      .eye-shine { animation: eye-blink 4s steps(1, end) infinite; }
+
+      /* 6. Headphone Sound Waves: 3-bar equalizer sequence */
+      @keyframes eq-1 { 0% { opacity: 1; } 75%, 100% { opacity: 0; } }
+      @keyframes eq-2 { 0% { opacity: 0; } 25% { opacity: 1; } 75%, 100% { opacity: 0; } }
+      @keyframes eq-3 { 0% { opacity: 0; } 50% { opacity: 1; } 75%, 100% { opacity: 0; } }
+      .wave-1 { animation: eq-1 1.2s steps(1, end) infinite; }
+      .wave-2 { animation: eq-2 1.2s steps(1, end) infinite; }
+      .wave-3 { animation: eq-3 1.2s steps(1, end) infinite; }
+
+      /* 7. Water Reflection Shimmer: whole-pixel band shift */
+      @keyframes shimmer {
+        0% { transform: translateX(0px); }
+        25% { transform: translateX(4px); }
+        50% { transform: translateX(0px); }
+        75%, 100% { transform: translateX(-4px); }
+      }
+      .water-glint { animation: shimmer 2.4s steps(1, end) infinite; }
+
+      /* 8. Coral Star Reflection: long/short flare swap */
+      .flare-long { animation: frame-1of2 1.6s steps(1, end) infinite; }
+      .flare-short { animation: frame-2of2 1.6s steps(1, end) infinite; }
+
+      /* 9. Sunset Scanline Crawl */
+      @keyframes scanline-crawl {
+        0% { transform: translateY(0px); }
+        33.333% { transform: translateY(2px); }
+        66.666%, 100% { transform: translateY(4px); }
+      }
+      .scanlines { animation: scanline-crawl 0.9s steps(1, end) infinite; }
+
+      @media (prefers-reduced-motion: reduce) {
+        * { animation: none !important; }
+      }
+    </style>
+  </defs>
+
+  <!-- ==================== 1. RETRO CREAM BACKGROUND ==================== -->
+  <rect width="1000" height="430" class="bg" />
+
+  <!-- ==================== 2. STARFIELD & SPACE DUST ==================== -->
+  <!-- Pixel Dust Trail (Dense band sweeping from the planet toward the upper right) -->
+  <g fill="#181818" opacity="0.75">
+    <rect x="548" y="130" width="1" height="1" /><rect x="560" y="124" width="1" height="1" /><rect x="590" y="105" width="2" height="2" /><rect x="624" y="96" width="1" height="1" />
+    <rect x="625" y="101" width="2" height="2" /><rect x="626" y="99" width="2" height="2" /><rect x="629" y="94" width="1" height="1" /><rect x="636" y="95" width="1" height="1" />
+    <rect x="645" y="88" width="2" height="2" /><rect x="652" y="96" width="1" height="1" /><rect x="656" y="81" width="2" height="2" /><rect x="659" y="86" width="1" height="1" />
+    <rect x="660" y="87" width="2" height="2" /><rect x="666" y="93" width="2" height="2" /><rect x="669" y="78" width="1" height="1" /><rect x="669" y="89" width="2" height="2" />
+    <rect x="671" y="80" width="2" height="2" /><rect x="696" y="84" width="2" height="2" /><rect x="698" y="83" width="2" height="2" /><rect x="699" y="79" width="2" height="2" />
+    <rect x="709" y="77" width="1" height="1" /><rect x="710" y="71" width="2" height="2" /><rect x="713" y="63" width="2" height="2" /><rect x="714" y="64" width="2" height="2" />
+    <rect x="716" y="80" width="2" height="2" /><rect x="718" y="79" width="2" height="2" /><rect x="720" y="64" width="1" height="1" /><rect x="720" y="78" width="2" height="2" />
+    <rect x="721" y="60" width="2" height="2" /><rect x="725" y="61" width="2" height="2" /><rect x="725" y="77" width="2" height="2" /><rect x="726" y="66" width="2" height="2" />
+    <rect x="727" y="72" width="2" height="2" /><rect x="728" y="61" width="1" height="1" /><rect x="730" y="66" width="2" height="2" /><rect x="732" y="57" width="2" height="2" />
+    <rect x="732" y="59" width="2" height="2" /><rect x="733" y="57" width="2" height="2" /><rect x="736" y="56" width="1" height="1" /><rect x="740" y="65" width="2" height="2" />
+    <rect x="742" y="57" width="1" height="1" /><rect x="745" y="65" width="1" height="1" /><rect x="748" y="61" width="2" height="2" /><rect x="749" y="61" width="1" height="1" />
+    <rect x="752" y="59" width="2" height="2" /><rect x="752" y="67" width="1" height="1" /><rect x="752" y="71" width="2" height="2" /><rect x="754" y="65" width="2" height="2" />
+    <rect x="758" y="48" width="1" height="1" /><rect x="759" y="56" width="1" height="1" /><rect x="762" y="54" width="2" height="2" /><rect x="763" y="51" width="1" height="1" />
+    <rect x="764" y="57" width="1" height="1" /><rect x="768" y="62" width="1" height="1" /><rect x="769" y="44" width="2" height="2" /><rect x="770" y="32" width="1" height="1" />
+    <rect x="771" y="45" width="2" height="2" /><rect x="774" y="45" width="2" height="2" /><rect x="775" y="45" width="2" height="2" /><rect x="776" y="55" width="2" height="2" />
+    <rect x="779" y="42" width="1" height="1" /><rect x="782" y="41" width="2" height="2" /><rect x="785" y="48" width="2" height="2" /><rect x="789" y="52" width="2" height="2" />
+    <rect x="793" y="62" width="2" height="2" /><rect x="804" y="30" width="1" height="1" /><rect x="812" y="40" width="1" height="1" /><rect x="818" y="70" width="1" height="1" />
+    <rect x="826" y="58" width="1" height="1" /><rect x="842" y="46" width="1" height="1" />
+    <!-- Isolated Specks -->
+    <rect x="415" y="92" width="2" height="2" /><rect x="902" y="246" width="2" height="2" /><rect x="610" y="214" width="2" height="2" />
+  </g>
+
+  <!-- 4-Point Pixel Sparkles (2-frame sprite, staggered via the d custom property) -->
+  <use href="#star-sparkle" x="358" y="22" />
+  <use href="#star-sparkle" x="664" y="156" style="--d: 0.7s" />
+  <use href="#star-sparkle" x="788" y="102" style="--d: 1.3s" />
+  <use href="#star-sparkle" x="763" y="198" style="--d: 0.4s" />
+  <use href="#star-sparkle" x="343" y="228" style="--d: 1.8s" />
+
+  <!-- Small Black Crosses (+) -->
+  <use href="#star-plus" x="305" y="6" class="ink blink-b" />
+  <use href="#star-plus" x="497" y="275" class="ink blink-a" />
+
+  <!-- Small Coral-Red Crosses (+) -->
+  <use href="#star-plus" x="522" y="53" class="coral blink-c" />
+  <use href="#star-plus" x="864" y="78" class="coral blink-a" />
+  <use href="#star-plus" x="384" y="172" class="coral blink-b" />
+
+  <!-- ==================== 3. FLOATING RINGED PLANET (SATURN) ==================== -->
+  <g transform="translate(447, 118)">
+    <g class="saturn-bob">
+      <g transform="rotate(-22)">
+        <!-- Back Ring -->
+        <ellipse cx="0" cy="0" rx="44" ry="10" fill="none" stroke="#181818" stroke-width="3.5" />
+        <ellipse cx="0" cy="0" rx="38" ry="7" fill="none" stroke="url(#dither-50)" stroke-width="2" />
+        <!-- Planet Body (Solid ink + dithered lit crescent on the upper-left) -->
+        <circle cx="0" cy="0" r="20" fill="#181818" stroke="#181818" stroke-width="3" />
+        <path d="M 3.5,-19.7 A 20,20 0 0,0 -19.7,3.5 A 26,26 0 0,1 3.5,-19.7 Z" fill="url(#dither-50)" />
+        <!-- Specular Pixel Highlight -->
+        <rect x="-12" y="-12" width="4" height="4" fill="#F4EFE6" />
+        <!-- Front Ring Crossing (With cream separator gap) -->
+        <path d="M -44,0 A 44,10 0 0,0 44,0" fill="none" stroke="#F4EFE6" stroke-width="7" />
+        <path d="M -44,0 A 44,10 0 0,0 44,0" fill="none" stroke="#181818" stroke-width="3.5" />
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== 4. SLICED RETRO CORAL SUN (RIGHT EDGE) ==================== -->
+  <g>
+    <!-- Sun Disc Clipped to Circle -->
+    <g clip-path="url(#sun-clip)">
+      <rect x="880" y="48" width="130" height="166" class="coral" />
+      <!-- Top Dithered Halftone Cap -->
+      <rect x="880" y="48" width="130" height="20" fill="url(#dither-red)" />
+      <!-- Horizontal Cream Scanline Cutouts (crawl downward) -->
+      <g class="scanlines">
+        <rect x="880" y="138" width="130" height="2" class="cream" />
+        <rect x="880" y="145" width="130" height="2" class="cream" />
+        <rect x="880" y="152" width="130" height="3" class="cream" />
+        <rect x="880" y="160" width="130" height="3" class="cream" />
+        <rect x="880" y="168" width="130" height="4" class="cream" />
+        <rect x="880" y="177" width="130" height="5" class="cream" />
+        <rect x="880" y="187" width="130" height="6" class="cream" />
+        <rect x="880" y="198" width="130" height="8" class="cream" />
+      </g>
+    </g>
+
+    <!-- Atmospheric Coral Scanline Streaks Extending Left of the Sun -->
+    <rect x="830" y="150" width="64" height="2" class="coral" />
+    <rect x="852" y="158" width="46" height="2" class="coral" />
+    <rect x="868" y="166" width="36" height="2" class="coral" />
+    <rect x="880" y="175" width="30" height="2" class="coral" />
+    <rect x="892" y="184" width="24" height="2" class="coral" />
+
+    <!-- Broken Coral Dashes Below the Disc -->
+    <rect x="936" y="214" width="14" height="2" class="coral" />
+    <rect x="956" y="214" width="8" height="2" class="coral" />
+    <rect x="944" y="220" width="18" height="2" class="coral" />
+    <rect x="952" y="226" width="6" height="2" class="coral" />
+  </g>
+
+  <!-- ==================== 5. LEFT COLUMN: PIXEL TITLE, BADGE & TAGLINE ==================== -->
+  <g transform="translate(54, 63) scale(1.12) translate(-54, -66)">
+    <!-- Dithered Pixel Halo / Shadow Behind Title -->
+    <use href="#pixel-title-glyphs" x="3" y="3" fill="url(#dither-25)" />
+    <use href="#pixel-title-glyphs" x="-2" y="2" fill="url(#dither-12)" />
+    <!-- Crisp Solid Black Pixel Title (SHREY / SINGH) -->
+    <use href="#pixel-title-glyphs" x="0" y="0" class="ink" />
+  </g>
+
+  <!-- Animated Blinking Coral-Red Underscore Cursor -->
+  <rect x="296" y="171" width="24" height="6" class="coral cursor" />
+
+  <!-- Stepped Pixel Badge: [ aka MrPanda009 ] -->
+  <g transform="translate(54, 194)">
+    <!-- Cream Fill -->
+    <rect x="4" y="2" width="210" height="30" class="cream" />
+    <rect x="2" y="4" width="214" height="26" class="cream" />
+    <!-- Top & Bottom Borders -->
+    <rect x="6" y="0" width="206" height="2.5" class="ink" />
+    <rect x="6" y="31.5" width="206" height="2.5" class="ink" />
+    <!-- Left & Right Borders -->
+    <rect x="0" y="6" width="2.5" height="22" class="ink" />
+    <rect x="215.5" y="6" width="2.5" height="22" class="ink" />
+    <!-- Stepped Pixel Corners -->
+    <rect x="2" y="2" width="4" height="2.5" class="ink" />
+    <rect x="2" y="2" width="2.5" height="4" class="ink" />
+    <rect x="212" y="2" width="4" height="2.5" class="ink" />
+    <rect x="213.5" y="2" width="2.5" height="4" class="ink" />
+    <rect x="2" y="29.5" width="4" height="2.5" class="ink" />
+    <rect x="2" y="28" width="2.5" height="4" class="ink" />
+    <rect x="212" y="29.5" width="4" height="2.5" class="ink" />
+    <rect x="213.5" y="28" width="2.5" height="4" class="ink" />
+    <!-- Badge Text -->
+    <text x="14" y="23.5" class="badge-text">aka MrPanda009</text>
+  </g>
+
+  <!-- Three-Line Monospace Tagline -->
+  <g transform="translate(54, 270)">
+    <text x="0" y="0" class="tagline-text">BUILDING USEFUL THINGS</text>
+    <text x="0" y="21" class="tagline-text">AT THE INTERSECTION OF</text>
+    <text x="0" y="42" class="tagline-text">CODE, AI, AND REAL-WORLD IMPACT.</text>
+  </g>
+
+  <!-- ==================== LANDSCAPE (shifted down 72px, a multiple of every dither tile) ==================== -->
+  <g transform="translate(0, 72)">
+
+  <!-- ==================== 6. DISTANT MOUNTAIN CONTOURS & PEEKING PANDA ==================== -->
+  <!-- Distant Stippled Mountain Silhouettes -->
+  <path d="M 555,272 L 580,256 L 605,264 L 630,248 L 650,260" fill="none" stroke="#181818" stroke-width="1.5" stroke-dasharray="3 3" />
+  <path d="M 885,244 L 915,228 L 938,236 L 965,220 L 985,228 L 1000,222" fill="none" stroke="#181818" stroke-width="1.5" stroke-dasharray="2 2" />
+  <path d="M 885,244 L 915,228 L 938,236 L 965,220 L 1000,222 L 1000,260 L 885,260 Z" fill="url(#dither-12)" />
+
+  <!-- Animated Sound/Beat Rays Above Panda's Headphones -->
+  <g class="coral" transform="translate(-12, -26)">
+    <path d="M 636,227 L 644,236 L 647,234 L 639,225 Z" class="wave-1" />
+    <path d="M 647,221 L 652,233 L 655,232 L 650,220 Z" class="wave-2" />
+    <path d="M 659,224 L 659,233 L 662,233 L 662,224 Z" class="wave-3" />
+  </g>
+
+  <!-- Peeking Panda with Headphones (MrPanda009) -->
+  <g class="panda-group">
+    <g transform="translate(690, 242) rotate(-8)">
+      <!-- Outer Headphone Band Arch -->
+      <path d="M -56,-2 A 56,48 0 0,1 56,-2" fill="none" stroke="#181818" stroke-width="4" />
+      <path d="M -52,-2 A 52,44 0 0,1 52,-2" fill="none" stroke="url(#dither-50)" stroke-width="3" />
+      <path d="M -49,-2 A 49,41 0 0,1 49,-2" fill="none" stroke="#181818" stroke-width="2" />
+
+      <!-- Round Black Panda Ears -->
+      <circle cx="-38" cy="-24" r="12" fill="#181818" />
+      <circle cx="38" cy="-24" r="12" fill="#181818" />
+
+      <!-- Left Headphone Earcup -->
+      <g transform="translate(-56, -4) rotate(12)">
+        <rect x="-8" y="-14" width="16" height="28" rx="6" fill="#F4EFE6" stroke="#181818" stroke-width="3" />
+        <rect x="-4" y="-10" width="8" height="20" fill="url(#dither-50)" />
+        <rect x="-10" y="-8" width="4" height="16" fill="#181818" />
+      </g>
+
+      <!-- Right Headphone Earcup -->
+      <g transform="translate(56, -4) rotate(-12)">
+        <rect x="-8" y="-14" width="16" height="28" rx="6" fill="#F4EFE6" stroke="#181818" stroke-width="3" />
+        <rect x="-4" y="-10" width="8" height="20" fill="url(#dither-50)" />
+        <rect x="6" y="-8" width="4" height="16" fill="#181818" />
+      </g>
+
+      <!-- Panda Head Dome -->
+      <ellipse cx="0" cy="2" rx="46" ry="38" fill="#F4EFE6" stroke="#181818" stroke-width="3" />
+
+      <!-- Left Eye Patch & Sparkling Pixel Eye -->
+      <g transform="translate(-19, -2) rotate(-14)">
+        <ellipse cx="0" cy="0" rx="13" ry="10" fill="#181818" />
+        <!-- Cute White Eye Pupils/Sparkles -->
+        <g class="eye-shine">
+          <rect x="-3" y="-4" width="5" height="5" fill="#F4EFE6" />
+          <rect x="2" y="1" width="2" height="2" fill="#F4EFE6" />
+        </g>
+      </g>
+
+      <!-- Right Eye Patch & Sparkling Pixel Eye -->
+      <g transform="translate(20, -2) rotate(14)">
+        <ellipse cx="0" cy="0" rx="13" ry="10" fill="#181818" />
+        <g class="eye-shine">
+          <rect x="-4" y="-4" width="5" height="5" fill="#F4EFE6" />
+          <rect x="1" y="1" width="2" height="2" fill="#F4EFE6" />
+        </g>
+      </g>
+
+      <!-- Cute Button Nose -->
+      <ellipse cx="0" cy="7" rx="5" ry="3.5" fill="#181818" />
+    </g>
+  </g>
+
+  <!-- ==================== 7. FOREGROUND 1-BIT DITHERED MOUNTAIN RANGE ==================== -->
+  <g>
+    <!-- Base Mountain Silhouette Fill (Cream mask to hide lower panda body) -->
+    <path d="M 125,288
+             L 235,286 L 268,274 L 298,284
+             L 335,264 L 365,274 L 395,285
+             L 432,262 L 478,282
+             L 525,258 L 575,276 L 628,284
+             L 660,266 L 690,262 L 718,258 L 746,264 L 770,256
+             L 805,236 L 832,248 L 872,216 L 918,246 L 952,232 L 1000,256
+             L 1000,292 L 125,292 Z" fill="#F4EFE6" />
+
+    <!-- Right-Slope Dithered Faces (50% & 75% 1-Bit Checkerboard) -->
+    <!-- Peak 1 (x: 235-298) -->
+    <polygon points="268,274 298,286 264,286" fill="url(#dither-50)" />
+    <!-- Peak 2 (x: 335-395) -->
+    <polygon points="335,264 395,286 342,286" fill="url(#dither-50)" />
+    <polygon points="335,264 365,286 335,286" fill="url(#dither-75)" />
+    <!-- Peak 3 (x: 432-478) -->
+    <polygon points="432,262 478,284 436,286" fill="url(#dither-50)" />
+    <!-- Peak 4 (x: 525-628) -->
+    <polygon points="525,258 615,286 530,286" fill="url(#dither-50)" />
+    <polygon points="525,258 568,286 520,286" fill="url(#dither-75)" />
+    <!-- Peak 5 (Low ridge in front of Panda, x: 640-770) -->
+    <polygon points="718,258 746,264 770,256 778,286 712,286" fill="url(#dither-50)" />
+    <!-- Tall Right Massif (x: 760-1000) -->
+    <polygon points="805,236 850,286 785,286" fill="url(#dither-75)" />
+    <polygon points="872,216 955,286 855,286" fill="url(#dither-50)" />
+    <polygon points="872,216 918,286 868,286" fill="url(#dither-75)" />
+    <polygon points="952,232 1000,256 1000,286 938,286" fill="url(#dither-50)" />
+    <polygon points="758,274 1000,274 1000,289 740,289" fill="url(#dither-75)" />
+
+    <!-- Solid Ink Left Shadow Slopes (Classic 1-Bit Woodcut Contrast) -->
+    <polygon points="235,286 268,274 264,286" class="ink" />
+    <polygon points="300,286 335,264 342,286" class="ink" />
+    <polygon points="395,286 432,262 440,286" class="ink" />
+    <polygon points="478,284 525,258 532,286 478,286" class="ink" />
+    <polygon points="640,286 660,266 690,262 718,258 712,286" class="ink" />
+    <polygon points="755,286 805,236 816,254 795,286" class="ink" />
+    <polygon points="822,268 872,216 882,238 855,286 822,286" class="ink" />
+    <polygon points="914,252 952,232 956,256 932,286 914,286" class="ink" />
+
+    <!-- Crisp White Snow / Ridge Highlights -->
+    <polyline points="335,264 345,274 342,284" fill="none" stroke="#F4EFE6" stroke-width="2.5" />
+    <polyline points="432,262 444,274 440,284" fill="none" stroke="#F4EFE6" stroke-width="2.5" />
+    <polyline points="525,258 542,272 558,276" fill="none" stroke="#F4EFE6" stroke-width="2.5" />
+    <polyline points="718,258 728,266 740,268" fill="none" stroke="#F4EFE6" stroke-width="2" />
+    <polyline points="805,236 818,248 828,252" fill="none" stroke="#F4EFE6" stroke-width="2.5" />
+    <polyline points="872,216 888,236 908,248 924,252" fill="none" stroke="#F4EFE6" stroke-width="3" />
+    <polyline points="952,232 968,246 988,254" fill="none" stroke="#F4EFE6" stroke-width="2.5" />
+
+    <!-- Mountain Ridge Outlines -->
+    <path d="M 160,287 L 235,286 L 268,274 L 298,284 L 335,264 L 365,274 L 395,285 L 432,262 L 478,282 L 525,258 L 575,276 L 628,284 L 660,266 L 690,262 L 718,258 L 746,264 L 770,256 L 805,236 L 832,248 L 872,216 L 918,246 L 952,232 L 1000,256" fill="none" stroke="#181818" stroke-width="2.5" />
+  </g>
+
+  <!-- ==================== 8. SHORELINE, LAKE REFLECTIONS & CORAL GLINT ==================== -->
+  <g>
+    <!-- Primary Horizon Shoreline Bars -->
+    <rect x="125" y="286" width="875" height="4" class="ink" />
+    <rect x="165" y="290" width="835" height="3" fill="url(#dither-50)" />
+    <rect x="120" y="293" width="690" height="3" class="ink" />
+    <rect x="830" y="293" width="170" height="2" class="ink" />
+
+    <!-- Sub-Shoreline Stippled Reflection Bands -->
+    <g class="water-glint">
+      <rect x="240" y="297" width="520" height="3" fill="url(#dither-25)" />
+      <rect x="520" y="300" width="460" height="4" fill="url(#water-lines)" />
+      <rect x="440" y="305" width="380" height="2" class="ink" />
+      <rect x="580" y="309" width="210" height="3" fill="url(#dither-50)" />
+      <rect x="610" y="314" width="130" height="2" fill="url(#dither-25)" />
+
+      <!-- Fine Horizontal Ripple Dashes -->
+      <rect x="170" y="300" width="40" height="2" class="ink" />
+      <rect x="330" y="302" width="45" height="2" class="ink" />
+      <rect x="405" y="306" width="28" height="2" class="ink" />
+      <rect x="485" y="311" width="55" height="2" class="ink" />
+      <rect x="645" y="320" width="65" height="2" class="ink" />
+      <rect x="895" y="304" width="85" height="2" fill="url(#dither-50)" />
+      <rect x="930" y="310" width="55" height="2" class="ink" />
+      <rect x="560" y="338" width="36" height="2" class="ink" />
+      <rect x="690" y="342" width="24" height="2" class="ink" />
+      <rect x="880" y="336" width="40" height="2" class="ink" />
+    </g>
+
+    <!-- Foreground Water Rocks / Tiny Islets -->
+    <!-- Rock 1 (x: 612) -->
+    <path d="M 604,316 L 612,311 L 620,316 Z" class="ink" />
+    <rect x="598" y="316" width="28" height="2" class="ink" />
+    <!-- Rock 2 (x: 748) -->
+    <path d="M 740,330 L 748,325 L 758,330 Z" class="ink" />
+    <rect x="734" y="330" width="30" height="2" class="ink" />
+    <!-- Rock 3 (x: 794) -->
+    <path d="M 784,326 L 795,319 L 806,326 Z" class="ink" />
+    <polygon points="795,319 806,326 796,326" fill="url(#dither-50)" />
+    <rect x="778" y="326" width="34" height="2" class="ink" />
+    <!-- Rock 4 (x: 838) -->
+    <path d="M 832,331 L 838,327 L 845,331 Z" class="ink" />
+    <rect x="828" y="331" width="22" height="2" class="ink" />
+
+    <!-- Sparkle Reflected in the Water -->
+    <use href="#star-sparkle" x="906" y="325" style="--d: 1s" />
+
+    <!-- Glowing Coral-Red Star Reflection in the Bottom-Right Lake -->
+    <g transform="translate(868, 312)">
+      <!-- Frame 1: Long Flare Cross + Far Glint Dashes -->
+      <g class="flare-long">
+        <rect x="-1" y="-12" width="2" height="24" class="coral" />
+        <rect x="-12" y="-1" width="24" height="2" class="coral" />
+        <rect x="-26" y="-1" width="9" height="2" class="coral" />
+        <rect x="17" y="-1" width="9" height="2" class="coral" />
+      </g>
+      <!-- Frame 2: Short Flare Cross + Near Glint Dashes -->
+      <g class="flare-short">
+        <rect x="-1" y="-8" width="2" height="16" class="coral" />
+        <rect x="-8" y="-1" width="16" height="2" class="coral" />
+        <rect x="-20" y="-1" width="7" height="2" class="coral" />
+        <rect x="13" y="-1" width="7" height="2" class="coral" />
+      </g>
+      <!-- Hollow Center Diamond -->
+      <rect x="-4" y="-4" width="8" height="8" class="coral" />
+      <rect x="-2" y="-2" width="4" height="4" class="cream" />
+      <!-- Static Lower Glint Dashes -->
+      <rect x="-18" y="5" width="6" height="2" class="coral" />
+      <rect x="12" y="5" width="6" height="2" class="coral" />
+    </g>
+  </g>
+
+  </g>
+</svg>
