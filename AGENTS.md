@@ -2,18 +2,43 @@
 
 GitHub **profile README** for Shrey Singh (`MrPanda009`). It is published by pushing this folder to the public repo `MrPanda009/MrPanda009`; GitHub shows its root `README.md` on the profile page.
 
-The whole page is a stack of hand-written, animated SVGs in a 1-bit, 90s pixel-art style. `Refernce.png` (filename typo is intentional, don't rename) is the full-page design mockup — treat it as the source of truth for layout, content and look.
+The whole page is a stack of hand-written, animated SVGs in a 1-bit, 90s pixel-art style, in a light and a dark theme. `Refernce.png` (light) and `Reference-dark.png` (dark) are the full-page design mockups — treat them as the source of truth for layout, content and look. (The light filename's typo is intentional; don't rename it.)
 
 ## Layout
 
 ```
-README.md                         stacks the SVGs, nothing else
-Refernce.png                      design mockup (top → bottom = README order)
-assets/Hero-Banner.svg            name, badge, tagline, panda landscape
+README.md                         stacks the SVGs as <picture> blocks, nothing else
+Refernce.png / Reference-dark.png design mockups (top → bottom = README order)
+assets/Hero-Banner.svg            name, badge, tagline, clouds + panda landscape
 assets/bento-about-currently.svg  ABOUT_ME + CURRENTLY_ windows
+assets/dark/*.svg                 GENERATED dark variants — never edit by hand
+scripts/build-themes.py           builds assets/dark/ and lints colour usage
 ```
 
-Planned sections are stubbed as HTML comments in `README.md` (`header-projects.svg`, three `card-*.svg` project cards at `width="32%"` wrapped in links, `bento-bottom.svg`). Build them in that order, then uncomment their block.
+Planned sections are stubbed as HTML comments in `README.md` (`header-projects.svg`, three `card-*.svg` project cards at `width="32%"` wrapped in links, `bento-bottom.svg`), already in `<picture>` form. Build them in that order, run the theme build, then uncomment their block.
+
+## Light and dark themes
+
+GitHub picks the image per visitor theme via `<picture>`: the `<source media="(prefers-color-scheme: dark)">` points at `assets/dark/<name>.svg`, the `<img>` at the light `assets/<name>.svg` (also the fallback). Every image in `README.md` must use this form.
+
+**The light SVG is the only source.** Each one holds all of its colours in a single palette block inside `<style>`:
+
+```css
+/* palette:start */
+:root { --bg: #F4EFE6; --ink: #181818; ... }
+/* palette:end */
+```
+
+and everything else uses role classes (`.bg`, `.ink`, `.coral`, `.st-ink`, …) or `url(#pattern)` fills — **never a hex, `rgb()` or named colour in a `fill`/`stroke` attribute or CSS rule.** The one exception is `fill="white"` inside a `<mask>`, which is luminance, not a colour.
+
+After any SVG change:
+
+```sh
+python3 scripts/build-themes.py          # writes assets/dark/, fails on hardcoded colours or bad XML
+python3 scripts/build-themes.py --check  # exit 1 if assets/dark/ is stale (use before committing / in CI)
+```
+
+A new colour role needs a value in the file's palette block **and** in `DARK` in `scripts/build-themes.py`; the build fails otherwise.
 
 ## How GitHub renders these SVGs (hard constraints)
 
@@ -23,7 +48,8 @@ README SVGs are displayed through `<img>`, which means:
 - **CSS animations and `<use href="#id">` work.** SMIL is avoided; use CSS `@keyframes` in a `<style>` block inside `<defs>`.
 - **No interactivity.** Hover states and links inside an SVG do nothing; make a section clickable by wrapping the `<img>` in an `<a>` in `README.md`.
 - **Fonts come from the viewer's OS.** Text uses the monospace stack below and renders slightly wider or narrower per platform — leave ~10% horizontal slack after any text that sits near a border.
-- **Each SVG paints its own cream background** (`<rect class="bg">`) so it looks identical on GitHub's light and dark themes.
+- **Each SVG paints its own background** (`<rect class="bg">`) so it never shows GitHub's page colour through.
+- **A `<clipPath>` may only `<use>` a single shape, never a `<g>`** — Chrome silently clips everything away. To clip to a group, use a `<mask>` with the `<use>` filled `white` (see the hero's cloud banks).
 
 ## SVG must be valid XML
 
@@ -39,17 +65,21 @@ A single parse error makes the image silently disappear on GitHub. This has alre
 
 ## Design system
 
-Reuse these exact values; copy shared `<defs>` (patterns, sprites) from `Hero-Banner.svg` rather than inventing new ones.
+Reuse these roles; copy shared `<defs>` (patterns, sprites) and the role classes from `Hero-Banner.svg` rather than inventing new ones. Pick the role by what a thing *is*, not by its light-mode colour — two things that are both `#181818` in light mode can need different roles in dark mode.
 
-| Token | Value | Use |
-|---|---|---|
-| cream | `#F4EFE6` | background, cut-outs |
-| ink | `#181818` | all line art and text |
-| coral | `#FF4E42` | single accent (sun, cursor, active state, highlights) |
-| coral light | `#FF766B` | top bevel on coral blocks only |
-| muted | `#7A756C` | inactive tracks/outlines only |
+| Role (`--var`) | Light | Dark | Use |
+|---|---|---|---|
+| `bg` | `#F4EFE6` | `#12110F` | canvas, window fills, cut-outs and gaps |
+| `ink` | `#181818` | `#F4EFE6` | line art, text, icons, dither dots — inverts |
+| `accent` | `#FF4E42` | `#FF4E42` | the single coral accent (sun, cursor, active state) |
+| `accent-hi` | `#FF766B` | `#FF766B` | top bevel on coral blocks only |
+| `muted` | `#7A756C` | `#6B665E` | inactive tracks/outlines only |
+| `shade` | `#181818` | `#12110F` | mountain shadow faces — stay dark in both themes |
+| `snow` | `#F4EFE6` | `#F4EFE6` | ridge highlights, planet specular — always cream |
+| `fur` / `fur-ink` | `#F4EFE6` / `#181818` | same | the panda's face and patches — never invert (a plain swap makes it a photo negative) |
 
-- Shared CSS classes: `.bg`, `.ink`, `.coral`, `.cream`.
+- Fill classes: `.bg`, `.ink`, `.coral`, `.coral-hi`, `.shade`, `.snow`, `.fur`, `.fur-ink`. Stroke classes: `.st-bg`, `.st-ink`, `.st-muted`, `.st-snow`, `.st-fur-ink`. Only define the ones a file uses.
+- Dark mode follows `Reference-dark.png`: cream line art on warm black, coral unchanged, mountains as dark shapes with cream ridge lines, panda still white-faced.
 - Font stack (all text): `ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace`. Headings/labels are UPPERCASE with `_` separators (`ABOUT_ME`, `CURRENTLY_`).
 - Shading is **dither patterns, never gradients or transparency**: `dither-12`, `dither-25`, `dither-50`, `dither-75`, `dither-red`, `water-lines`. Patterns use `patternUnits="userSpaceOnUse"`; when shifting a group that uses them, translate by a multiple of 24 px (LCM of the 4/6/8 px tiles) so the dither grid stays aligned.
 - Reusable sprites: `#star-sparkle` (2-frame 4-point star), `#star-plus`, `#pixel-title-glyphs` (6 px grid), `#icon-folder`, `#window-dots`.
@@ -74,9 +104,9 @@ The owner explicitly wants every animation to feel like an old sprite game:
 
 ## Verifying a change
 
-1. `xmllint --noout assets/*.svg` — must print nothing.
-2. Render a still: `qlmanage -t -s 2000 -o <tmp-dir> assets/<file>.svg` and compare against the matching part of `Refernce.png`.
-3. Check animation the way GitHub shows it: serve the repo (`python3 -m http.server`) and open a page that embeds the SVGs as `<img width="100%">`, mirroring `README.md`. Confirm nothing overlaps, text isn't clipped and frames switch cleanly.
+1. `python3 scripts/build-themes.py` then `xmllint --noout assets/*.svg assets/dark/*.svg` — both must succeed silently (apart from the build's `wrote …` lines).
+2. Render a still: `qlmanage -t -s 2000 -o <tmp-dir> assets/<file>.svg` and compare against the matching part of `Refernce.png`; do the same for `assets/dark/<file>.svg` against `Reference-dark.png`.
+3. Check both themes the way GitHub shows them: serve the repo (`python3 -m http.server`), open a page with the same `<picture>` markup as `README.md`, and toggle the browser/OS colour scheme (Playwright: `page.emulateMedia({ colorScheme: 'dark' })`). Confirm the right file loads, nothing overlaps, text isn't clipped and frames switch cleanly.
 
 ## Content facts
 
