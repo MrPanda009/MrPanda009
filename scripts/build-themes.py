@@ -36,6 +36,7 @@ DARK = {
     "accent": "#FF4E42",     # coral is identical in both themes
     "accent-hi": "#FF766B",
     "muted": "#6B665E",      # inactive tracks, a little darker than light mode's
+    "faint": "#2A2824",      # empty contribution cells, just above the canvas
     "shade": "#12110F",      # mountain shadow faces stay dark
     "snow": "#F4EFE6",       # ridge highlights stay cream
     "fur": "#F4EFE6",        # panda face never inverts
