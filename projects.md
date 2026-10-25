@@ -5,11 +5,13 @@
   After editing it, run:  python3 scripts/build-projects.py
   (Editing it on github.com runs that automatically via .github/workflows/build-projects.yml.)
 
-  Format, one block per project, in display order (3 cards per row):
+  Format, one block per project, in display order. Layout: 4 cards per row when the number of
+  projects is a multiple of 4 (4, 8, ...), otherwise 3 per row. The limits below depend on it:
 
-    ## Project name          shown as the card title (max 20 characters)
+    ## Project name          shown as the card title (max 16 characters at 4 per row, 20 at 3 per row)
     - link: https://...      where the card goes; leave empty for a dashed "coming soon" card
-    - description: ...       one sentence; wraps automatically (max 3 lines, about 85 characters)
+    - description: ...       one sentence; wraps automatically (max 3 lines: about 69 characters at
+                             4 per row, 87 at 3 per row)
     - tags: A, B, C          comma-separated pills; they must fit on one row (about 3 short tags)
 
   "view all" is where the section header's VIEW ALL arrow links to.

@@ -15,12 +15,14 @@ It also refuses to build if a source hardcodes a colour outside the palette
 block (a fill/stroke/color written as a hex or rgb() value), because that colour
 would not change in dark mode.
 
-Finally it stacks the full-width strips listed in compose.py into one seamless
-SVG per theme: assets/composed/profile.svg and assets/composed/dark/profile.svg.
+Then it stacks the full-width strips listed in compose.py into one seamless SVG per
+theme (assets/composed/[dark/]profile.svg), wraps everything below it in background
+slices (assets/composed/[dark/]sheet-*.svg, see sheet.py), and rewrites the README's
+<!-- page:start --> ... <!-- page:end --> block that lays the whole page out as one sheet.
 
 Usage:
-    python3 scripts/build-themes.py           # regenerate assets/dark/ and assets/composed/
-    python3 scripts/build-themes.py --check   # exit 1 if either is stale (for CI)
+    python3 scripts/build-themes.py           # regenerate assets/dark/, assets/composed/ and the README page block
+    python3 scripts/build-themes.py --check   # exit 1 if any of them is stale (for CI)
 """
 
 import re
@@ -32,9 +34,11 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "assets"
 OUT_DIR = SRC_DIR / "dark"
 COMPOSED_DIR = SRC_DIR / "composed"
+README = ROOT / "README.md"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import compose  # noqa: E402  (scripts/compose.py)
+import sheet  # noqa: E402  (scripts/sheet.py)
 
 # Dark values for every colour role. Sampled from Reference-dark.png.
 DARK = {
@@ -126,28 +130,65 @@ def main():
             p.unlink()
             print(f"removed {p.relative_to(ROOT)}")
 
+    def emit(target, out):
+        """Write a generated file (or, with --check, just report that it is stale)."""
+        if target.exists() and target.read_text(encoding="utf-8") == out:
+            return
+        if check:
+            stale.append(target.relative_to(ROOT))
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(out, encoding="utf-8")
+            print(f"wrote {target.relative_to(ROOT)}")
+
+    def valid(label, out):
+        try:
+            ET.fromstring(out)
+            return True
+        except ET.ParseError as e:
+            errors.append(f"{label}: generated output is not valid XML ({e})")
+            return False
+
+    read_light = lambda name: (SRC_DIR / name).read_text(encoding="utf-8")  # noqa: E731
+    read_dark = lambda name: dark_texts[name]  # noqa: E731
+
     # The stacked full-width strips, merged into one seamless SVG per theme (see compose.py).
     if not errors:
-        themes = [
-            (COMPOSED_DIR, lambda name: (SRC_DIR / name).read_text(encoding="utf-8")),
-            (COMPOSED_DIR / "dark", lambda name: dark_texts[name]),
-        ]
-        for out_dir, read in themes:
+        for out_dir, read in ((COMPOSED_DIR, read_light), (COMPOSED_DIR / "dark", read_dark)):
             out = compose.compose(read)
-            try:
-                ET.fromstring(out)
-            except ET.ParseError as e:
-                errors.append(f"{compose.OUT_NAME}: composed output is not valid XML ({e})")
-                continue
-            target = out_dir / compose.OUT_NAME
-            if target.exists() and target.read_text(encoding="utf-8") == out:
-                continue
-            if check:
-                stale.append(target.relative_to(ROOT))
+            if valid(compose.OUT_NAME, out):
+                emit(out_dir / compose.OUT_NAME, out)
+
+    # Everything below it, wrapped in background slices so the page reads as one sheet (see sheet.py),
+    # plus the README block that lays all of it out in a single paragraph.
+    if not errors:
+        try:
+            slices, block = sheet.build(read_light, read_dark)
+        except (KeyError, FileNotFoundError) as e:
+            errors.append(f"sheet: missing part {e} (run python3 scripts/build-projects.py first?)")
+            slices, block = None, None
+        except sheet.StaleParts as e:
+            errors.append(f"sheet: {e} (run python3 scripts/build-projects.py to rebuild the cards)")
+            slices, block = None, None
+        if slices:
+            for theme, out_dir in (("light", COMPOSED_DIR), ("dark", COMPOSED_DIR / "dark")):
+                for name, out in slices[theme].items():
+                    if valid(name, out):
+                        emit(out_dir / name, out)
+                # Slices for cards or buttons that no longer exist.
+                for old in out_dir.glob("sheet-*.svg") if out_dir.exists() else []:
+                    if old.name not in slices[theme]:
+                        if check:
+                            stale.append(old.relative_to(ROOT))
+                        else:
+                            old.unlink()
+                            print(f"removed {old.relative_to(ROOT)}")
+            readme = README.read_text(encoding="utf-8")
+            new, n = re.subn(r"<!-- page:start -->.*?<!-- page:end -->", lambda _: block, readme, flags=re.S)
+            if n != 1:
+                errors.append("README.md: expected exactly one <!-- page:start --> ... <!-- page:end --> block")
             else:
-                out_dir.mkdir(parents=True, exist_ok=True)
-                target.write_text(out, encoding="utf-8")
-                print(f"wrote {target.relative_to(ROOT)}")
+                emit(README, new)
 
     for e in errors:
         print("error:", e, file=sys.stderr)
@@ -156,7 +197,7 @@ def main():
     if errors or stale:
         sys.exit(1)
     if check:
-        print("assets/dark/ and assets/composed/ are up to date")
+        print("assets/dark/, assets/composed/ and the README page block are up to date")
 
 
 if __name__ == "__main__":
