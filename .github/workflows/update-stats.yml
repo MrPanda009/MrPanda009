@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-stats
+  group: readme-assets # shared with build-projects.yml so the two never push at the same time
   cancel-in-progress: false
 
 jobs:
