@@ -15,9 +15,12 @@ It also refuses to build if a source hardcodes a colour outside the palette
 block (a fill/stroke/color written as a hex or rgb() value), because that colour
 would not change in dark mode.
 
+Finally it stacks the full-width strips listed in compose.py into one seamless
+SVG per theme: assets/composed/profile.svg and assets/composed/dark/profile.svg.
+
 Usage:
-    python3 scripts/build-themes.py           # regenerate assets/dark/
-    python3 scripts/build-themes.py --check   # exit 1 if assets/dark/ is stale (for CI)
+    python3 scripts/build-themes.py           # regenerate assets/dark/ and assets/composed/
+    python3 scripts/build-themes.py --check   # exit 1 if either is stale (for CI)
 """
 
 import re
@@ -28,6 +31,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "assets"
 OUT_DIR = SRC_DIR / "dark"
+COMPOSED_DIR = SRC_DIR / "composed"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import compose  # noqa: E402  (scripts/compose.py)
 
 # Dark values for every colour role. Sampled from Reference-dark.png.
 DARK = {
@@ -90,12 +97,14 @@ def main():
     check = "--check" in sys.argv[1:]
     sources = sorted(SRC_DIR.glob("*.svg"))
     errors, stale = [], []
+    dark_texts = {}  # expected dark output per source, so the composite can be built even in --check mode
 
     for path in sources:
         out, errs = build(path)
         errors += errs
         if errs:
             continue
+        dark_texts[path.name] = out
         target = OUT_DIR / path.name
         current = target.read_text(encoding="utf-8") if target.exists() else None
         if current == out:
@@ -117,6 +126,29 @@ def main():
             p.unlink()
             print(f"removed {p.relative_to(ROOT)}")
 
+    # The stacked full-width strips, merged into one seamless SVG per theme (see compose.py).
+    if not errors:
+        themes = [
+            (COMPOSED_DIR, lambda name: (SRC_DIR / name).read_text(encoding="utf-8")),
+            (COMPOSED_DIR / "dark", lambda name: dark_texts[name]),
+        ]
+        for out_dir, read in themes:
+            out = compose.compose(read)
+            try:
+                ET.fromstring(out)
+            except ET.ParseError as e:
+                errors.append(f"{compose.OUT_NAME}: composed output is not valid XML ({e})")
+                continue
+            target = out_dir / compose.OUT_NAME
+            if target.exists() and target.read_text(encoding="utf-8") == out:
+                continue
+            if check:
+                stale.append(target.relative_to(ROOT))
+            else:
+                out_dir.mkdir(parents=True, exist_ok=True)
+                target.write_text(out, encoding="utf-8")
+                print(f"wrote {target.relative_to(ROOT)}")
+
     for e in errors:
         print("error:", e, file=sys.stderr)
     for s in stale:
@@ -124,7 +156,7 @@ def main():
     if errors or stale:
         sys.exit(1)
     if check:
-        print("assets/dark/ is up to date")
+        print("assets/dark/ and assets/composed/ are up to date")
 
 
 if __name__ == "__main__":

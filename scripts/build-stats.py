@@ -30,11 +30,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SVG = ROOT / "assets" / "bento-bottom.svg"
 LOGIN = os.environ.get("STATS_USER", "MrPanda009")
-WEEKS = 30  # columns that fit the window: 30 x 10px pitch = 298px
+WEEKS = 53  # a full year: 53 x 10px pitch = 530px, centred in the 588px window
 LEVELS = ["NONE", "FIRST_QUARTILE", "SECOND_QUARTILE", "THIRD_QUARTILE", "FOURTH_QUARTILE"]
 
 # Stat column centres and baselines, in GITHUB_STATS window coordinates.
-COLUMN_X = [53.25, 127.75, 202.25, 276.75]
+COLUMN_X = [85.5, 224.5, 363.5, 502.5]
 VALUE_Y, LABEL_Y = 70, 84
 
 

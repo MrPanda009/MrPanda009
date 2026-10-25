@@ -1,32 +1,27 @@
 <!--
   Every image is a <picture>: GitHub loads assets/dark/<name>.svg when the visitor
   uses a dark theme, and the light assets/<name>.svg otherwise (also the fallback).
-  assets/dark/ is generated: run `python3 scripts/build-themes.py` after editing a light SVG.
+  assets/dark/ and assets/composed/ are generated: run `python3 scripts/build-themes.py` after editing a light SVG.
   The GITHUB_STATS numbers and grid are refreshed daily by .github/workflows/update-stats.yml.
 -->
 
-<!-- Hero Banner, About Me / Currently Bento, Tech Stack / GitHub Stats / Connect Bento -->
+<!-- Hero Banner, About Me / Currently Bento and Tech Stack / GitHub Stats Bento, stacked into ONE image by
+     scripts/compose.py (separate stacked images leave a faint seam line on 1x screens). Edit the parts in assets/. -->
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/dark/Hero-Banner.svg" />
-    <img src="./assets/Hero-Banner.svg" width="100%" align="top" alt="Shrey Singh aka MrPanda009" />
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/dark/bento-about-currently.svg" />
-    <img src="./assets/bento-about-currently.svg" width="100%" align="top" alt="About Me and Current Focus" />
-  </picture>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/dark/bento-bottom.svg" />
-    <img src="./assets/bento-bottom.svg" width="100%" align="top" alt="Tech stack, GitHub stats and contact links" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/composed/dark/profile.svg" />
+    <img src="./assets/composed/profile.svg" width="100%" alt="Shrey Singh (MrPanda009): building useful things at the intersection of code, AI and real-world impact. About me, what I'm currently working on, tech stack and live GitHub stats." />
   </picture>
 </p>
 
-<!-- Clickable links for the LET'S_CONNECT window (links inside README images can't be clicked) -->
+<!-- LET'S_CONNECT: one linked pixel button per link (links inside a single README image can't be clicked).
+     Portfolio has no link yet: its button is dashed and muted. -->
 <p align="center">
-  <a href="https://github.com/MrPanda009">GitHub</a> ·
-  <a href="https://www.linkedin.com/in/shrey-singh-70898237b/">LinkedIn</a> ·
-  <a href="https://x.com/MrPanda009w">X (Twitter)</a> ·
-  <a href="mailto:shrey33005@gmail.com">Email</a>
+  <a href="https://github.com/MrPanda009"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/dark/btn-github.svg" /><img src="./assets/btn-github.svg" height="40" alt="GitHub" /></picture></a>
+  <a href="https://www.linkedin.com/in/shrey-singh-70898237b/"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/dark/btn-linkedin.svg" /><img src="./assets/btn-linkedin.svg" height="40" alt="LinkedIn" /></picture></a>
+  <a href="https://x.com/MrPanda009w"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/dark/btn-x.svg" /><img src="./assets/btn-x.svg" height="40" alt="X (Twitter)" /></picture></a>
+  <a href="mailto:shrey33005@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/dark/btn-email.svg" /><img src="./assets/btn-email.svg" height="40" alt="Email" /></picture></a>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="./assets/dark/btn-portfolio.svg" /><img src="./assets/btn-portfolio.svg" height="40" alt="Portfolio (coming soon)" /></picture>
 </p>
 
 <!-- Featured Projects Header (upcoming)

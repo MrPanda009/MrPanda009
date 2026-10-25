@@ -4,18 +4,21 @@ GitHub **profile README** for Shrey Singh (`MrPanda009`). It is published by pus
 
 The whole page is a stack of hand-written, animated SVGs in a 1-bit, 90s pixel-art style, in a light and a dark theme. `Refernce.png` (light) and `Reference-dark.png` (dark) are the full-page design mockups — treat them as the source of truth for look and content. (The light filename's typo is intentional; don't rename it.)
 
-**Section order deliberately differs from the mockups:** the owner moved FEATURED_PROJECTS to the end. README order is hero → ABOUT_ME/CURRENTLY → TECH_STACK/GITHUB_STATS/LET'S_CONNECT → link row → FEATURED_PROJECTS. The mockups' footer strip ("EXPLORING IDEAS…") isn't built.
+**Section order deliberately differs from the mockups:** the owner moved FEATURED_PROJECTS to the end. README order is hero → ABOUT_ME/CURRENTLY → TECH_STACK/GITHUB_STATS → LET'S_CONNECT buttons → FEATURED_PROJECTS. LET'S_CONNECT is a row of linked buttons, not the mockups' window (see Links). The mockups' footer strip ("EXPLORING IDEAS…") isn't built.
 
 ## Layout
 
 ```
-README.md                         stacks the SVGs as <picture> blocks + one HTML link row
+README.md                         one <picture> of the composed page + the linked button row
 Refernce.png / Reference-dark.png design mockups (look and content; order differs, see above)
 assets/Hero-Banner.svg            name, badge, tagline, clouds + panda landscape
 assets/bento-about-currently.svg  ABOUT_ME + CURRENTLY_ windows
-assets/bento-bottom.svg           TECH_STACK + GITHUB_STATS + LET'S_CONNECT windows
+assets/bento-bottom.svg           TECH_STACK + GITHUB_STATS windows
+assets/btn-*.svg                  LET'S_CONNECT buttons (github, linkedin, x, email, portfolio)
 assets/dark/*.svg                 GENERATED dark variants — never edit by hand
-scripts/build-themes.py           builds assets/dark/ and lints colour usage
+assets/composed/[dark/]profile.svg GENERATED: hero + both bentos stacked into one SVG per theme — never edit
+scripts/build-themes.py           builds assets/dark/ + assets/composed/ and lints colour usage
+scripts/compose.py                stacks the full-width strips into one SVG (called by build-themes)
 scripts/build-stats.py            fills GITHUB_STATS from the GitHub API, then runs build-themes
 .github/workflows/update-stats.yml runs build-stats daily and commits any change
 ```
@@ -26,7 +29,7 @@ Still to build, stubbed as HTML comments at the end of `README.md` in `<picture>
 
 The GITHUB_STATS window in `bento-bottom.svg` is part hand-written, part generated:
 
-- `scripts/build-stats.py` rewrites **only** the content between `<!-- stats:start -->`/`<!-- stats:end -->` (repos, all-time commits, followers, following) and `<!-- grid:start -->`/`<!-- grid:end -->` (last 30 weeks of the contribution calendar, plus a blinking frame on today's cell). Never hand-edit inside those markers; everything around them is normal hand-written SVG.
+- `scripts/build-stats.py` rewrites **only** the content between `<!-- stats:start -->`/`<!-- stats:end -->` (repos, all-time commits, followers, following) and `<!-- grid:start -->`/`<!-- grid:end -->` (the last 53 weeks, i.e. a full year, of the contribution calendar, plus a blinking frame on today's cell). Never hand-edit inside those markers; everything around them is normal hand-written SVG.
 - Numbers come from the real API — never type stats in by hand. Values ≥ 1000 render as `1k+`, `2.3k+` etc.
 - Grid levels use `#cell-0`…`#cell-4` (`faint` empty cell → 25/50/75 % coral dithers → solid coral), placed with `<use x y>` so each cell's dither starts at its own corner.
 - The workflow runs daily (03:17 UTC) and on demand from the Actions tab. It uses the built-in token, which only sees public contributions; the owner can add a `STATS_TOKEN` repo secret (a PAT) to count private commits.
@@ -34,7 +37,11 @@ The GITHUB_STATS window in `bento-bottom.svg` is part hand-written, part generat
 
 ## Links
 
-Links inside README images can't be clicked, so the LET'S_CONNECT window is visual only and a centered HTML link row sits right under the bento in `README.md`. Owner's links: GitHub `github.com/MrPanda009`, LinkedIn `linkedin.com/in/shrey-singh-70898237b/`, X `x.com/MrPanda009w`, email `shrey33005@gmail.com`. Portfolio is "(soon)" — no link yet.
+Nothing inside a README image can be clicked (GitHub strips image maps and inline `<svg>`), so LET'S_CONNECT is one small SVG per link, each wrapped in its own `<a><picture>…</picture></a>` in a centred row under the bento. Each button is 176×48 with no canvas behind it, so it sits on GitHub's page colour, shown at `height="40"`. Linked buttons have an ink drop shadow, a chevron and a coral underline; the unlinked Portfolio button is dashed and muted. When the portfolio goes live, give its button the linked style and wrap it in an `<a>`. A new button copies an existing `btn-*.svg` and goes through the theme build like every other asset.
+
+When previewing with `gh api markdown`, use `mode=gfm`: `mode=markdown` pulls the `<img>` out of `<a><picture>`, which real READMEs don't do (checked against vercel/next.js's rendered README).
+
+Owner's links: GitHub `github.com/MrPanda009`, LinkedIn `linkedin.com/in/shrey-singh-70898237b/`, X `x.com/MrPanda009w`, email `shrey33005@gmail.com`. Portfolio is "(soon)" — no link yet.
 
 ## Light and dark themes
 
@@ -53,8 +60,8 @@ and everything else uses role classes (`.bg`, `.ink`, `.coral`, `.st-ink`, …) 
 After any SVG change:
 
 ```sh
-python3 scripts/build-themes.py          # writes assets/dark/, fails on hardcoded colours or bad XML
-python3 scripts/build-themes.py --check  # exit 1 if assets/dark/ is stale (use before committing / in CI)
+python3 scripts/build-themes.py          # writes assets/dark/ and assets/composed/, fails on hardcoded colours or bad XML
+python3 scripts/build-themes.py --check  # exit 1 if either is stale (use before committing / in CI)
 ```
 
 A new colour role needs a value in the file's palette block **and** in `DARK` in `scripts/build-themes.py`; the build fails otherwise.
@@ -79,7 +86,7 @@ A single parse error makes the image silently disappear on GitHub. This has alre
 - Check every file before finishing:
 
   ```sh
-  xmllint --noout assets/*.svg
+  xmllint --noout assets/*.svg assets/dark/*.svg assets/composed/*.svg assets/composed/dark/*.svg
   ```
 
 ## Design system
@@ -103,13 +110,17 @@ Reuse these roles; copy shared `<defs>` (patterns, sprites) and the role classes
 - Dark mode follows `Reference-dark.png`: cream line art on warm black, coral unchanged, mountains as dark shapes with cream ridge lines, panda still white-faced.
 - Font stack (all text): `ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace`. Headings/labels are UPPERCASE with `_` separators (`ABOUT_ME`, `CURRENTLY_`).
 - Shading is **dither patterns, never gradients or transparency**: `dither-12`, `dither-25`, `dither-50`, `dither-75`, `dither-red`, `water-lines`. Patterns use `patternUnits="userSpaceOnUse"`; when shifting a group that uses them, translate by a multiple of 24 px (LCM of the 4/6/8 px tiles) so the dither grid stays aligned.
-- Reusable sprites: `#star-sparkle` (2-frame 4-point star), `#star-plus`, `#pixel-title-glyphs` (6 px grid), `#icon-folder`, `#icon-bars`, `#icon-link`, `#window-dots`, `#tile`.
-- Windows/cards: 2.5 px ink stroke, `rx="8"`, header icon + title + `o o o` dots (dots at `x = width − 50`, or −44 when tight), 2 px divider at y 36. A title that nearly fills its header gets `textLength` + `lengthAdjust="spacingAndGlyphs"` so wider OS fonts can't push it into the dots (see LET'S_CONNECT).
+- Reusable sprites: `#star-sparkle` (2-frame 4-point star), `#star-plus`, `#pixel-title-glyphs` (6 px grid), `#icon-folder`, `#icon-bars`, `#window-dots`, `#tile`.
+- Windows/cards: 2.5 px ink stroke, `rx="8"`, header icon + title + `o o o` dots (dots at `x = width − 50`, or −44 when tight), 2 px divider at y 36. A title that nearly fills its header gets `textLength` + `lengthAdjust="spacingAndGlyphs"` so wider OS fonts can't push it into the dots.
 - Set `shape-rendering="crispEdges"` (root or per group) so edges stay pixel-sharp.
 
 ## Canvas sizes
 
-All sections are full-width strips stacked with `width="100%"` and `align="top"`, so every full-width SVG uses a **viewBox width of 1000** with a 50-ish px side margin to line up with its neighbours. Current heights: hero `1000×430`, about/currently bento `1000×354`, bottom bento `1000×210` (windows at x 50 / 362 / 704, widths 300 / 330 / 246, 12 px gaps). Keep the cream colour running edge-to-edge so stacked images read as one page.
+All sections are full-width strips with a **viewBox width of 1000** and a 50-ish px side margin so they line up with each other.
+
+**Never stack full-width strips as separate README images.** Stacked `<img>`s meet at fractional pixel positions, and on 1x screens the browser softens each image's edge row against the page, so a faint white line shows between strips in light mode (measured: about half of all widths). Instead, add the new strip to `PARTS` in `scripts/compose.py`. It gets inlined into `assets/composed/profile.svg` on a page-coloured backdrop, with its ids, classes and `@keyframes` auto-prefixed per part (`hero-`, `about-`, `stats-`), so parts can reuse names freely. The colour-role variables stay shared. The composite viewBox height is the sum of the parts' heights.
+
+In the composite, the current part heights are: hero `1000×430`, about/currently bento `1000×354`, bottom bento `1000×210` (windows at x 50 / 362, widths 300 / 588, 12 px gap), for a `1000×994` total. Keep each part's background running edge-to-edge.
 
 ## Animation rules (90s pixel-art motion)
 
@@ -125,7 +136,7 @@ The owner explicitly wants every animation to feel like an old sprite game:
 
 ## Verifying a change
 
-1. `python3 scripts/build-themes.py` then `xmllint --noout assets/*.svg assets/dark/*.svg` — both must succeed silently (apart from the build's `wrote …` lines).
+1. `python3 scripts/build-themes.py` then `xmllint --noout assets/*.svg assets/dark/*.svg assets/composed/*.svg assets/composed/dark/*.svg` — both must succeed silently (apart from the build's `wrote …` lines).
 2. Render a still: `qlmanage -t -s 2000 -o <tmp-dir> assets/<file>.svg` and compare against the matching part of `Refernce.png`; do the same for `assets/dark/<file>.svg` against `Reference-dark.png`.
 3. Check both themes the way GitHub shows them: serve the repo (`python3 -m http.server`), open a page with the same `<picture>` markup as `README.md`, and toggle the browser/OS colour scheme (Playwright: `page.emulateMedia({ colorScheme: 'dark' })`). Confirm the right file loads, nothing overlaps, text isn't clipped and frames switch cleanly.
 
