@@ -24,7 +24,7 @@ import re
 import subprocess
 import sys
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,37 +65,25 @@ def fetch(tok):
     data = graphql(f"""
     query {{
       user(login: "{LOGIN}") {{
-        createdAt
         repositories(ownerAffiliations: OWNER, privacy: PUBLIC) {{ totalCount }}
         followers {{ totalCount }}
         following {{ totalCount }}
         contributionsCollection {{
           contributionCalendar {{
+            totalContributions
             weeks {{ contributionDays {{ contributionLevel date }} }}
           }}
         }}
       }}
     }}""", tok)["user"]
 
-    # contributionsCollection spans at most a year, so sum all-time commits one year at a time.
-    start = datetime.fromisoformat(data["createdAt"].replace("Z", "+00:00"))
-    now = datetime.now(timezone.utc)
-    windows = []
-    while start < now:
-        end = min(start + timedelta(days=365), now)
-        windows.append((start, end))
-        start = end
-    fields = "\n".join(
-        f'y{i}: contributionsCollection(from: "{a.isoformat()}", to: "{b.isoformat()}") {{ totalCommitContributions }}'
-        for i, (a, b) in enumerate(windows)
-    )
-    years = graphql(f'query {{ user(login: "{LOGIN}") {{ {fields} }} }}', tok)["user"]
-    commits = sum(v["totalCommitContributions"] for v in years.values())
-
-    weeks = data["contributionsCollection"]["contributionCalendar"]["weeks"][-WEEKS:]
+    # Without from/to, contributionsCollection is the last year: the same span as the grid and
+    # as GitHub's "N contributions in the last year" (commits, PRs, issues and reviews).
+    calendar = data["contributionsCollection"]["contributionCalendar"]
+    weeks = calendar["weeks"][-WEEKS:]
     return {
         "repos": data["repositories"]["totalCount"],
-        "commits": commits,
+        "contributions": calendar["totalContributions"],
         "followers": data["followers"]["totalCount"],
         "following": data["following"]["totalCount"],
         "weeks": [[LEVELS.index(d["contributionLevel"]) for d in w["contributionDays"]] for w in weeks],
@@ -114,7 +102,7 @@ def short(n):
 
 
 def render_stats(s, indent):
-    cols = [(short(s["repos"]), "Public Repos"), (short(s["commits"]), "Total Commits"),
+    cols = [(short(s["repos"]), "Public Repos"), (short(s["contributions"]), "Contributions"),
             (short(s["followers"]), "Followers"), (short(s["following"]), "Following")]
     lines = []
     for x, (value, label) in zip(COLUMN_X, cols):
@@ -158,7 +146,7 @@ def main():
     out = fill(out, "grid", render_grid(stats, g.group(1) if g else ""))
     if out != src:
         SVG.write_text(out, encoding="utf-8")
-        print(f"updated {SVG.relative_to(ROOT)}: {stats['repos']} repos, {stats['commits']} commits, "
+        print(f"updated {SVG.relative_to(ROOT)}: {stats['repos']} repos, {stats['contributions']} contributions, "
               f"{stats['followers']} followers, {stats['following']} following")
     else:
         print("stats unchanged")

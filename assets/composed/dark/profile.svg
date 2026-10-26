@@ -824,15 +824,16 @@
     </g>
     <text x="64" y="196" class="about-body-text">AI / LLM Enthusiast</text>
 
-    <!-- Row 4: Globe Icon + Interested in Geospatial, / Sustainability & Infra Tech -->
+    <!-- Row 4: Android Robot Head Icon + Interested in Android, / LLMs & open-source tools -->
     <g transform="translate(39, 226)">
-      <circle class="about-st-ink" cx="0" cy="0" r="9.4" fill="none" stroke-width="1.95" />
-      <ellipse class="about-st-ink" cx="0" cy="0" rx="4.4" ry="9.4" fill="none" stroke-width="1.65" />
-      <line class="about-st-ink" x1="-8.7" y1="-3.1" x2="8.7" y2="-3.1" stroke-width="1.55" />
-      <line class="about-st-ink" x1="-8.7" y1="3.1" x2="8.7" y2="3.1" stroke-width="1.55" />
+      <path class="about-st-ink" d="M -9.4,6 A 9.4 9.4 0 0 1 9.4,6 Z" fill="none" stroke-width="1.95" stroke-linejoin="round" />
+      <line class="about-st-ink" x1="-5.2" y1="-1.8" x2="-7.6" y2="-6.4" stroke-width="1.65" stroke-linecap="round" />
+      <line class="about-st-ink" x1="5.2" y1="-1.8" x2="7.6" y2="-6.4" stroke-width="1.65" stroke-linecap="round" />
+      <circle class="about-ink" cx="-3.6" cy="2.2" r="1.3" />
+      <circle class="about-ink" cx="3.6" cy="2.2" r="1.3" />
     </g>
-    <text x="64" y="230" class="about-body-text">Interested in Geospatial,</text>
-    <text x="64" y="250" class="about-body-text">Sustainability &amp; Infra Tech</text>
+    <text x="64" y="230" class="about-body-text">Interested in Android,</text>
+    <text x="64" y="250" class="about-body-text">LLMs &amp; open-source tools</text>
 
     <!-- Row 5: Solid Heart Icon + Love building useful things / and learning in public. -->
     <g transform="translate(39, 277)">
@@ -869,7 +870,7 @@
 
     <!-- Item 3 -->
     <circle class="about-st-ink" cx="36" cy="138" r="7.5" fill="none" stroke-width="2" />
-    <text x="58" y="143" class="about-body-text">Learning more about geospatial &amp; DRR</text>
+    <text x="58" y="143" class="about-body-text">Learning Android dev with Kotlin</text>
 
     <!-- Item 4 -->
     <circle class="about-st-ink" cx="36" cy="173" r="7.5" fill="none" stroke-width="2" />
@@ -1179,10 +1180,10 @@
 
     <!-- Stat Values & Labels (filled in by scripts/build-stats.py; do not edit by hand) -->
     <!-- stats:start -->
-    <text x="85.5" y="70" class="stats-stat-value">28</text>
+    <text x="85.5" y="70" class="stats-stat-value">29</text>
     <text x="85.5" y="84" class="stats-stat-label">Public Repos</text>
-    <text x="224.5" y="70" class="stats-stat-value">1k+</text>
-    <text x="224.5" y="84" class="stats-stat-label">Total Commits</text>
+    <text x="224.5" y="70" class="stats-stat-value">1.1k+</text>
+    <text x="224.5" y="84" class="stats-stat-label">Contributions</text>
     <text x="363.5" y="70" class="stats-stat-value">6</text>
     <text x="363.5" y="84" class="stats-stat-label">Followers</text>
     <text x="502.5" y="70" class="stats-stat-value">6</text>
@@ -1284,8 +1285,8 @@
       <use href="#stats-cell-2" x="490" y="50" /> <use href="#stats-cell-1" x="490" y="60" /> <use href="#stats-cell-2" x="500" y="0" /> <use href="#stats-cell-1" x="500" y="10" />
       <use href="#stats-cell-0" x="500" y="20" /> <use href="#stats-cell-0" x="500" y="30" /> <use href="#stats-cell-0" x="500" y="40" /> <use href="#stats-cell-1" x="500" y="50" />
       <use href="#stats-cell-0" x="500" y="60" /> <use href="#stats-cell-0" x="510" y="0" /> <use href="#stats-cell-0" x="510" y="10" /> <use href="#stats-cell-0" x="510" y="20" />
-      <use href="#stats-cell-0" x="510" y="30" /> <use href="#stats-cell-0" x="510" y="40" /> <use href="#stats-cell-0" x="510" y="50" /> <use href="#stats-cell-0" x="510" y="60" />
-      <use href="#stats-cell-0" x="520" y="0" /> <rect x="519" y="-1" width="10" height="10" fill="none" class="stats-st-ink stats-today" stroke-width="1.5" />
+      <use href="#stats-cell-0" x="510" y="30" /> <use href="#stats-cell-0" x="510" y="40" /> <use href="#stats-cell-0" x="510" y="50" /> <use href="#stats-cell-1" x="510" y="60" />
+      <use href="#stats-cell-1" x="520" y="0" /> <use href="#stats-cell-1" x="520" y="10" /> <use href="#stats-cell-1" x="520" y="20" /> <rect x="519" y="19" width="10" height="10" fill="none" class="stats-st-ink stats-today" stroke-width="1.5" />
       <!-- grid:end -->
     </g>
   </g>

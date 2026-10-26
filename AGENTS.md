@@ -51,7 +51,7 @@ The owner maintains the project list in `projects.md` (format notes at its top).
 
 The GITHUB_STATS window in `bento-bottom.svg` is part hand-written, part generated:
 
-- `scripts/build-stats.py` rewrites **only** the content between `<!-- stats:start -->`/`<!-- stats:end -->` (repos, all-time commits, followers, following) and `<!-- grid:start -->`/`<!-- grid:end -->` (the last 53 weeks, i.e. a full year, of the contribution calendar, plus a blinking frame on today's cell). Never hand-edit inside those markers; everything around them is normal hand-written SVG.
+- `scripts/build-stats.py` rewrites **only** the content between `<!-- stats:start -->`/`<!-- stats:end -->` (public repos, contributions in the last year — the same span as the grid and GitHub's own "N contributions in the last year" — followers, following) and `<!-- grid:start -->`/`<!-- grid:end -->` (the last 53 weeks, i.e. a full year, of the contribution calendar, plus a blinking frame on today's cell). Never hand-edit inside those markers; everything around them is normal hand-written SVG.
 - Numbers come from the real API — never type stats in by hand. Values ≥ 1000 render as `1k+`, `2.3k+` etc.
 - Grid levels use `#cell-0`…`#cell-4` (`faint` empty cell → 25/50/75 % coral dithers → solid coral), placed with `<use x y>` so each cell's dither starts at its own corner.
 - The workflow runs daily (03:17 UTC) and on demand from the Actions tab. It uses the built-in token, which only sees public contributions; the owner can add a `STATS_TOKEN` repo secret (a PAT) to count private commits.

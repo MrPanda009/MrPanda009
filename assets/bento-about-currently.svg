@@ -192,15 +192,16 @@
     </g>
     <text x="64" y="196" class="body-text">AI / LLM Enthusiast</text>
 
-    <!-- Row 4: Globe Icon + Interested in Geospatial, / Sustainability & Infra Tech -->
+    <!-- Row 4: Android Robot Head Icon + Interested in Android, / LLMs & open-source tools -->
     <g transform="translate(39, 226)">
-      <circle class="st-ink" cx="0" cy="0" r="9.4" fill="none" stroke-width="1.95" />
-      <ellipse class="st-ink" cx="0" cy="0" rx="4.4" ry="9.4" fill="none" stroke-width="1.65" />
-      <line class="st-ink" x1="-8.7" y1="-3.1" x2="8.7" y2="-3.1" stroke-width="1.55" />
-      <line class="st-ink" x1="-8.7" y1="3.1" x2="8.7" y2="3.1" stroke-width="1.55" />
+      <path class="st-ink" d="M -9.4,6 A 9.4 9.4 0 0 1 9.4,6 Z" fill="none" stroke-width="1.95" stroke-linejoin="round" />
+      <line class="st-ink" x1="-5.2" y1="-1.8" x2="-7.6" y2="-6.4" stroke-width="1.65" stroke-linecap="round" />
+      <line class="st-ink" x1="5.2" y1="-1.8" x2="7.6" y2="-6.4" stroke-width="1.65" stroke-linecap="round" />
+      <circle class="ink" cx="-3.6" cy="2.2" r="1.3" />
+      <circle class="ink" cx="3.6" cy="2.2" r="1.3" />
     </g>
-    <text x="64" y="230" class="body-text">Interested in Geospatial,</text>
-    <text x="64" y="250" class="body-text">Sustainability &amp; Infra Tech</text>
+    <text x="64" y="230" class="body-text">Interested in Android,</text>
+    <text x="64" y="250" class="body-text">LLMs &amp; open-source tools</text>
 
     <!-- Row 5: Solid Heart Icon + Love building useful things / and learning in public. -->
     <g transform="translate(39, 277)">
@@ -237,7 +238,7 @@
 
     <!-- Item 3 -->
     <circle class="st-ink" cx="36" cy="138" r="7.5" fill="none" stroke-width="2" />
-    <text x="58" y="143" class="body-text">Learning more about geospatial &amp; DRR</text>
+    <text x="58" y="143" class="body-text">Learning Android dev with Kotlin</text>
 
     <!-- Item 4 -->
     <circle class="st-ink" cx="36" cy="173" r="7.5" fill="none" stroke-width="2" />
