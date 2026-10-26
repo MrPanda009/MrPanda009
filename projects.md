@@ -34,7 +34,7 @@ view all: https://github.com/MrPanda009?tab=repositories
 - description: Find infra waste. Reduce cloud cost & carbon.
 - tags: Next.js, AWS, Serverless
 
-## SETU-DRR
-- link:
+## The Dead Zone
+- link: https://github.com/MrPanda009/the-dead-zone
 - description: Flood susceptibility pipeline (Geospatial + SAR)
 - tags: Python, GIS, Sentinel-1
