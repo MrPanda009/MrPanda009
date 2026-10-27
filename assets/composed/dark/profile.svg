@@ -1286,7 +1286,7 @@
       <use href="#stats-cell-0" x="500" y="20" /> <use href="#stats-cell-0" x="500" y="30" /> <use href="#stats-cell-0" x="500" y="40" /> <use href="#stats-cell-1" x="500" y="50" />
       <use href="#stats-cell-0" x="500" y="60" /> <use href="#stats-cell-0" x="510" y="0" /> <use href="#stats-cell-0" x="510" y="10" /> <use href="#stats-cell-0" x="510" y="20" />
       <use href="#stats-cell-0" x="510" y="30" /> <use href="#stats-cell-0" x="510" y="40" /> <use href="#stats-cell-0" x="510" y="50" /> <use href="#stats-cell-1" x="510" y="60" />
-      <use href="#stats-cell-1" x="520" y="0" /> <use href="#stats-cell-1" x="520" y="10" /> <rect x="519" y="9" width="10" height="10" fill="none" class="stats-st-ink stats-today" stroke-width="1.5" />
+      <use href="#stats-cell-1" x="520" y="0" /> <use href="#stats-cell-1" x="520" y="10" /> <use href="#stats-cell-1" x="520" y="20" /> <rect x="519" y="19" width="10" height="10" fill="none" class="stats-st-ink stats-today" stroke-width="1.5" />
       <!-- grid:end -->
     </g>
   </g>
