@@ -369,7 +369,7 @@
       <use href="#cell-0" x="500" y="60" /> <use href="#cell-0" x="510" y="0" /> <use href="#cell-0" x="510" y="10" /> <use href="#cell-0" x="510" y="20" />
       <use href="#cell-0" x="510" y="30" /> <use href="#cell-0" x="510" y="40" /> <use href="#cell-0" x="510" y="50" /> <use href="#cell-1" x="510" y="60" />
       <use href="#cell-1" x="520" y="0" /> <use href="#cell-1" x="520" y="10" /> <use href="#cell-1" x="520" y="20" /> <use href="#cell-0" x="520" y="30" />
-      <rect x="519" y="29" width="10" height="10" fill="none" class="st-ink today" stroke-width="1.5" />
+      <use href="#cell-0" x="520" y="40" /> <rect x="519" y="39" width="10" height="10" fill="none" class="st-ink today" stroke-width="1.5" />
       <!-- grid:end -->
     </g>
   </g>
