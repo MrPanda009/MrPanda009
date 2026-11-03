@@ -5,6 +5,7 @@
   - FEATURED_PROJECTS comes from projects.md: edit it, then run `python3 scripts/build-projects.py`.
   - LET'S_CONNECT button links live in BUTTONS in scripts/sheet.py.
   - The GITHUB_STATS numbers and grid are refreshed daily by .github/workflows/update-stats.yml.
+  - scripts/texture.py adds the approved print texture to final composites and slices during every theme build.
 -->
 
 <!-- page:start -->

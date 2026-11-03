@@ -19,6 +19,7 @@ Then it stacks the full-width strips listed in compose.py into one seamless SVG 
 theme (assets/composed/[dark/]profile.svg), wraps everything below it in background
 slices (assets/composed/[dark/]sheet-*.svg, see sheet.py), and rewrites the README's
 <!-- page:start --> ... <!-- page:end --> block that lays the whole page out as one sheet.
+The final composites and slices receive the seeded print texture from texture.py.
 
 Usage:
     python3 scripts/build-themes.py           # regenerate assets/dark/, assets/composed/ and the README page block
@@ -39,6 +40,7 @@ README = ROOT / "README.md"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import compose  # noqa: E402  (scripts/compose.py)
 import sheet  # noqa: E402  (scripts/sheet.py)
+import texture  # noqa: E402  (scripts/texture.py)
 
 # Dark values for every colour role. Sampled from Reference-dark.png.
 DARK = {
@@ -152,23 +154,22 @@ def main():
     read_light = lambda name: (SRC_DIR / name).read_text(encoding="utf-8")  # noqa: E731
     read_dark = lambda name: dark_texts[name]  # noqa: E731
 
-    # The stacked full-width strips, merged into one seamless SVG per theme (see compose.py).
-    if not errors:
-        for out_dir, read in ((COMPOSED_DIR, read_light), (COMPOSED_DIR / "dark", read_dark)):
-            out = compose.compose(read)
-            if valid(compose.OUT_NAME, out):
-                emit(out_dir / compose.OUT_NAME, out)
-
-    # Everything below it, wrapped in background slices so the page reads as one sheet (see sheet.py),
-    # plus the README block that lays all of it out in a single paragraph.
+    # Compose clean artwork first, then texture the entire sheet in shared page
+    # coordinates. Both daily stats and project builds run through this path.
     if not errors:
         try:
-            slices, block = sheet.build(read_light, read_dark)
+            cells = sheet.plan(read_light)
+            slices, block = sheet.build(read_light, read_dark, cells)
+            profiles = {"light": compose.compose(read_light), "dark": compose.compose(read_dark)}
+            slices = texture.build(profiles, slices, cells, read_light, read_dark)
         except (KeyError, FileNotFoundError) as e:
             errors.append(f"sheet: missing part {e} (run python3 scripts/build-projects.py first?)")
             slices, block = None, None
         except sheet.StaleParts as e:
             errors.append(f"sheet: {e} (run python3 scripts/build-projects.py to rebuild the cards)")
+            slices, block = None, None
+        except ValueError as e:
+            errors.append(str(e))
             slices, block = None, None
         if slices:
             for theme, out_dir in (("light", COMPOSED_DIR), ("dark", COMPOSED_DIR / "dark")):

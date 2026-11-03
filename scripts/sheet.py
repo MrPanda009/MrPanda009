@@ -64,7 +64,7 @@ def _viewbox(svg):
 
 
 def plan(read):
-    """Return (cells, view_all): every slice in page order. read(name) gives a light part's SVG text."""
+    """Return every slice in page order. read(name) gives a light part's SVG text."""
     bp = _projects()
     view_all, projects = bp.parse()
     cells = []
@@ -86,7 +86,7 @@ def plan(read):
     # Project cards: build-projects.py already cut each card on the grid
     # (3 per row: 348 / 304 / 348; 4 per row: 272 / 228 / 228 / 272).
     cols, rows = bp.layout(projects)
-    for row in rows:
+    for row_index, row in enumerate(rows):
         names = [f"project-{bp.slug(p['name'])}.svg" for p, _ in row]
         sizes = [_viewbox(read(nm))[2:] for nm in names]
         for nm, (p, kind), (w, _) in zip(names, row, sizes):
@@ -95,14 +95,14 @@ def plan(read):
                 raise StaleParts(f"{nm} is {w:g} units wide but the {cols}-per-row layout needs {expected:g}")
         h = max(s[1] for s in sizes) + CARD_GAP_BELOW
         fill = (PAGE_W - sum(s[0] for s in sizes)) / 2
-        filler = dict(out=f"sheet-fill-{fill:g}x{h:g}.svg", w=fill, h=h, part=None, link=None, alt="")
+        filler = dict(out=f"sheet-fill-{row_index}-left.svg", w=fill, h=h, part=None, link=None, alt="")
         if fill > 0:
             cells.append(filler)
         for (p, _), nm, (w, ph) in zip(row, names, sizes):
             cells.append(dict(out=f"sheet-{nm}", w=w, h=h, part=(nm, 0, 0, w, ph), link=p["link"] or None,
                               alt=f"{p['name']}: {p['description']}" + ("" if p["link"] else " (coming soon)")))
         if fill > 0:
-            cells.append(dict(filler))
+            cells.append(dict(filler, out=f"sheet-fill-{row_index}-right.svg"))
 
     cells.append(dict(out="sheet-footer.svg", w=PAGE_W, h=FOOTER_H,
                       part=("footer.svg", 0, FOOTER_TOP, PAGE_W, 110), link=None,
@@ -148,9 +148,10 @@ def readme_block(cells):
             "<!-- page:end -->")
 
 
-def build(read_light, read_dark):
+def build(read_light, read_dark, cells=None):
     """Return ({"light": {name: svg}, "dark": {name: svg}}, readme_block)."""
-    cells = plan(read_light)
+    if cells is None:
+        cells = plan(read_light)
     out = {"light": {}, "dark": {}}
     for theme, read in (("light", read_light), ("dark", read_dark)):
         bg = bg_colour(read)
