@@ -361,10 +361,10 @@
     <rect x="892" y="184" width="24" height="2" class="coral" />
 
     <!-- Broken Coral Dashes Below the Disc -->
-    <rect x="936" y="214" width="14" height="2" class="coral" />
-    <rect x="956" y="214" width="8" height="2" class="coral" />
-    <rect x="944" y="220" width="18" height="2" class="coral" />
-    <rect x="952" y="226" width="6" height="2" class="coral" />
+    <rect x="954" y="214" width="14" height="2" class="coral" />
+    <rect x="974" y="214" width="8" height="2" class="coral" />
+    <rect x="959" y="220" width="18" height="2" class="coral" />
+    <rect x="965" y="226" width="6" height="2" class="coral" />
   </g>
 
   <!-- ==================== 5. LEFT COLUMN: PIXEL TITLE, BADGE & TAGLINE ==================== -->
